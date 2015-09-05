@@ -6,7 +6,7 @@ class Connection:
     Connection to go-cannon for sending emails.
     """
 
-    def __init__(self, tls=False, host='localhost', port=8025, username=None,
+    def __init__(self, host='localhost', port=8025, tls=False, username=None,
                  password=None):
         """
         Provide the security information and credentials necessary to make
@@ -26,8 +26,22 @@ class Connection:
             host, port,
         )
 
+    def send(self, from_, to, subject, text, html='', cc=[], bcc=[]):
+        """
+        Send an email using go-cannon.
+        """
+        return self._session.post("{}/send".format(self._url), json={
+            'from': from_,
+            'to': to,
+            'cc': cc,
+            'bcc': bcc,
+            'subject': subject,
+            'text': text,
+            'html': html,
+        }).json()
+
     def version(self):
         """
         Obtain the current version of go-cannon.
         """
-        return self._session.get("{}/version".format(self._url)).json()['version']
+        return self._session.get("{}/version".format(self._url)).json()
