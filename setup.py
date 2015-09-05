@@ -7,6 +7,7 @@ setup(
     packages=find_packages(),
     install_requires=[
         'requests',
+        'six',
     ],
     author='Nathan Osman',
     author_email='nathan@quickmediasolutions.com',
