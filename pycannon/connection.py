@@ -1,4 +1,5 @@
 from requests import Session
+from six import string_types
 
 
 class Connection:
@@ -26,10 +27,19 @@ class Connection:
             host, port,
         )
 
-    def send(self, from_, to, subject, text, html='', cc=[], bcc=[]):
+    def send(self, from_, to, subject, text='', html='', cc=[], bcc=[]):
         """
         Send an email using go-cannon.
         """
+
+        # Ensure "to" is a list
+        if isinstance(to, string_types):
+            raise TypeError('"to" parameter must be enumerable')
+
+        # Ensure either "text" or "html" was provided
+        if text == '' and html == '':
+            raise ValueError('"text" and "html" must not both be empty')
+
         return self._session.post("{}/send".format(self._url), json={
             'from': from_,
             'to': to,
