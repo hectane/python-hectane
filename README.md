@@ -1,6 +1,8 @@
 ## pycannon
 
 [![License](http://img.shields.io/badge/license-MIT-yellow.svg)](http://opensource.org/licenses/MIT)
+[![PyPI Version](http://img.shields.io/pypi/v/pycannon.svg)](https://pypi.python.org/pypi/pycannon)
+[![PyPI Downloads](http://img.shields.io/pypi/dm/pycannon.svg)](https://pypi.python.org/pypi/pycannon)
 
 A Python module for sending emails with [go-cannon](https://github.com/nathan-osman/go-cannon).
 
