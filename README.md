@@ -26,3 +26,17 @@ Accessing the go-cannon API with pycannon centers around the `Connection` object
         "Email Subject",
         "Plain text body.",
     )
+
+### Django Backend
+
+For projects using the [Django framework](https://www.djangoproject.com/), an email backend for go-cannon is available. To use the backend, add the following line to `settings.py`:
+
+    EMAIL_BACKEND = 'pycannon.django.GoCannonBackend'
+
+The following settings are also recognized:
+
+- `GO_CANNON_HOST`
+- `GO_CANNON_PORT`
+- `GO_CANNON_TLS`
+- `GO_CANNON_USERNAME`
+- `GO_CANNON_PASSWORD`
