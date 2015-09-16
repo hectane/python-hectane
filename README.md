@@ -21,10 +21,14 @@ Accessing the go-cannon API with pycannon centers around the `Connection` object
     c = pycannon.Connection()
 
     c.send(
-        'me@me.com',
-        ['you@you.com'],
-        "Email Subject",
-        "Plain text body.",
+        from_='me@me.com',
+        to=['you@you.com'],
+        subject="Email Subject",
+        text="Email body.",
+        attachments=[
+            'somefile.zip',
+            'otherfile.tar.gz',
+        ],
     )
 
 ### Django Backend
