@@ -17,15 +17,9 @@ class Connection:
         Provide the security information and credentials necessary to make
         connections to the go-cannon API.
         """
-
-        # Create the session that will store the authentication information
         self._session = Session()
-
-        # If credentials were provided, use them
         if username and password:
             self._session.auth = (username, password)
-
-        # Build the URL that will be used for accessing the API
         self._url = '{}://{}:{}/v1'.format(
             'https' if tls else 'http',
             host, port,
@@ -63,15 +57,10 @@ class Connection:
         """
         Send an email using go-cannon.
         """
-
-        # Ensure "to" is a list
         if isinstance(to, string_types):
             raise TypeError('"to" parameter must be enumerable')
-
-        # Ensure either "text" or "html" was provided
         if text == '' and html == '':
             raise ValueError('"text" and "html" must not both be empty')
-
         return self._session.post("{}/send".format(self._url), json={
             'from': from_,
             'to': to,
