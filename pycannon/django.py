@@ -35,14 +35,16 @@ class GoCannonBackend(BaseEmailBackend):
         for a in email.attachments:
             if isinstance(a, MIMEBase):
                 if not a.is_multipart():
-                    # TODO: we could avoid decoding base64 content if there
-                    # were an easy way to determine if it was already
-                    # base64-encoded
-                    yield {
+                    obj = {
                         'filename': a.get_filename(),
                         'content_type': a.get_content_type(),
-                        'content': a.get_payload(decode=True),
                     }
+                    if a.get('content-transfer-encoding') == 'base64':
+                        obj['content'] = a.get_payload()
+                        obj['encoded'] = True
+                    else:
+                        obj['content'] = a.get_payload(decode=True)
+                    yield obj
             else:
                 yield {
                     'filename': a[0],
