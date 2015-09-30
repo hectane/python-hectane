@@ -33,26 +33,30 @@ class Connection:
 
     def _process_attachments(self, attachments):
         """
-        Convert a list of strings and file objects to a list of attachment
-        objects with the appropriate attributes.
+        Create attachments suitable for delivery to go-cannon from the provided
+        list of attachments.
+
+        Each attachment may be either a local filename, a file object, or a
+        dict describing the content (in the same format as go-cannon). Note
+        that if the filename cannot be determined, it will be set to
+        "untitled".
         """
         for a in attachments:
-
-            # If a string was provided, treat it as a filename
-            if isinstance(a, string_types):
-                a = open(a, 'rb')
-
-            # Read and encode the contents and determine the filename
-            content = encodestring(a.read())
-            filename = basename(getattr(a, 'name', 'untitled'))
-
-            # Yield the content of the attachment
-            yield {
-                "filename": filename,
-                "content_type": guess_type(filename)[0] or 'application/octet-stream',
-                "content": content,
-                "encoded": True,
-            }
+            if isinstance(a, dict):
+                if 'encoded' not in a or not a['encoded']:
+                    a['content'] = encodestring(a['content'])
+                    a['encoded'] = True
+                yield a
+            else:
+                if isinstance(a, string_types):
+                    a = open(a, 'rb')
+                filename = basename(getattr(a, 'name', 'untitled'))
+                yield {
+                    "filename": filename,
+                    "content_type": guess_type(filename)[0] or 'application/octet-stream',
+                    "content": encodestring(a.read()),
+                    "encoded": True,
+                }
 
     def send(self, from_, to, subject, text='', html='', cc=[], bcc=[],
              attachments=[]):
