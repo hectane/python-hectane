@@ -1,24 +1,24 @@
-## pycannon
+## pyhectane
 
 [![License](http://img.shields.io/badge/license-MIT-yellow.svg)](http://opensource.org/licenses/MIT)
-[![PyPI Version](http://img.shields.io/pypi/v/pycannon.svg)](https://pypi.python.org/pypi/pycannon)
-[![PyPI Downloads](http://img.shields.io/pypi/dm/pycannon.svg)](https://pypi.python.org/pypi/pycannon)
+[![PyPI Version](http://img.shields.io/pypi/v/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
+[![PyPI Downloads](http://img.shields.io/pypi/dm/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
 
-A Python module for sending emails with [go-cannon](https://github.com/nathan-osman/go-cannon).
+A Python module for sending emails with [Hectane](https://github.com/hectane/hectane).
 
 ### Installation
 
-Installing pycannon is as simple as:
+Installing pyhectane is as simple as:
 
-    pip install pycannon
+    pip install pyhectane
 
 ### Usage
 
-Accessing the go-cannon API with pycannon centers around the `Connection` object. The example below demonstrates the process of creating an instance and using it to send a simple email:
+Accessing the Hectane API with pyhectane centers around the `Connection` object. The example below demonstrates the process of creating an instance and using it to send a simple email:
 
-    import pycannon
+    import pyhectane
 
-    c = pycannon.Connection()
+    c = pyhectane.Connection()
 
     c.send(
         from_='me@me.com',
@@ -33,14 +33,14 @@ Accessing the go-cannon API with pycannon centers around the `Connection` object
 
 ### Django Backend
 
-For projects using the [Django framework](https://www.djangoproject.com/), an email backend for go-cannon is available. To use the backend, add the following line to `settings.py`:
+For projects using the [Django framework](https://www.djangoproject.com/), an email backend for Hectane is available. To use the backend, add the following line to `settings.py`:
 
-    EMAIL_BACKEND = 'pycannon.django.GoCannonBackend'
+    EMAIL_BACKEND = 'pyhectane.django.HectaneBackend'
 
 The following settings are also recognized:
 
-- `GO_CANNON_HOST`
-- `GO_CANNON_PORT`
-- `GO_CANNON_TLS`
-- `GO_CANNON_USERNAME`
-- `GO_CANNON_PASSWORD`
+- `HECTANE_HOST`
+- `HECTANE_PORT`
+- `HECTANE_TLS`
+- `HECTANE_USERNAME`
+- `HECTANE_PASSWORD`
