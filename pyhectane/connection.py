@@ -8,14 +8,14 @@ from six import string_types
 
 class Connection:
     """
-    Connection to go-cannon for sending emails.
+    Connection to Hectane for sending emails.
     """
 
     def __init__(self, host='localhost', port=8025, tls=False, username=None,
                  password=None):
         """
         Provide the security information and credentials necessary to make
-        connections to the go-cannon API.
+        connections to the Hectane API.
         """
         self._session = Session()
         if username and password:
@@ -27,13 +27,12 @@ class Connection:
 
     def _process_attachments(self, attachments):
         """
-        Create attachments suitable for delivery to go-cannon from the provided
+        Create attachments suitable for delivery to Hectane from the provided
         list of attachments.
 
         Each attachment may be either a local filename, a file object, or a
-        dict describing the content (in the same format as go-cannon). Note
-        that if the filename cannot be determined, it will be set to
-        "untitled".
+        dict describing the content (in the same format as Hectane). Note that
+        if the filename cannot be determined, it will be set to "untitled".
         """
         for a in attachments:
             if isinstance(a, dict):
@@ -55,7 +54,7 @@ class Connection:
     def send(self, from_, to, subject, text='', html='', cc=[], bcc=[],
              attachments=[]):
         """
-        Send an email using go-cannon.
+        Send an email using Hectane.
         """
         if isinstance(to, string_types):
             raise TypeError('"to" parameter must be enumerable')
@@ -74,6 +73,6 @@ class Connection:
 
     def version(self):
         """
-        Obtain the current version of go-cannon.
+        Obtain the current version of Hectane.
         """
         return self._session.get("{}/version".format(self._url)).json()

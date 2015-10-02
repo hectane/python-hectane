@@ -9,22 +9,22 @@ from django.core.mail.message import EmailMultiAlternatives
 from .connection import Connection
 
 
-class GoCannonBackend(BaseEmailBackend):
+class HectaneBackend(BaseEmailBackend):
     """
-    Django email backend for go-cannon.
+    Django email backend for Hectane.
     """
 
     def __init__(self, **kwargs):
         """
-        Initialize the connection to go-cannon.
+        Initialize the connection to Hectane.
         """
-        super(GoCannonBackend, self).__init__(**kwargs)
+        super(HectaneBackend, self).__init__(**kwargs)
         self._connection = Connection(
-            host=getattr(settings, 'GO_CANNON_HOST', 'localhost'),
-            port=getattr(settings, 'GO_CANNON_PORT', 8025),
-            tls=getattr(settings, 'GO_CANNON_TLS', False),
-            username=getattr(settings, 'GO_CANNON_USERNAME', None),
-            password=getattr(settings, 'GO_CANNON_PASSWORD', None),
+            host=getattr(settings, 'HECTANE_HOST', 'localhost'),
+            port=getattr(settings, 'HECTANE_PORT', 8025),
+            tls=getattr(settings, 'HECTANE_TLS', False),
+            username=getattr(settings, 'HECTANE_USERNAME', None),
+            password=getattr(settings, 'HECTANE_PASSWORD', None),
         )
 
     def _process_attachments(self, email):

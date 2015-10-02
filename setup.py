@@ -2,8 +2,8 @@ from setuptools import setup, find_packages
 
 
 setup(
-    name='pycannon',
-    version='0.3.0',
+    name='pyhectane',
+    version='0.3.1',
     packages=find_packages(),
     install_requires=[
         'requests',
@@ -11,9 +11,9 @@ setup(
     ],
     author='Nathan Osman',
     author_email='nathan@quickmediasolutions.com',
-    description="Python module for sending emails with go-cannon",
+    description="Python module for sending emails with Hectane",
     license='MIT',
-    url='https://github.com/nathan-osman/pycannon',
+    url='https://github.com/hectane/python-hectane',
     classifiers=[
         'Development Status :: 5 - Production/Stable',
         'Intended Audience :: Developers',
