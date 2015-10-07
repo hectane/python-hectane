@@ -6,7 +6,7 @@ setup(
     version='0.3.1',
     packages=find_packages(),
     install_requires=[
-        'requests',
+        'requests>=2.4.2',
         'six',
     ],
     author='Nathan Osman',
