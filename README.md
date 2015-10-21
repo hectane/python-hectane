@@ -1,6 +1,7 @@
 ## pyhectane
 
 [![Build Status](https://travis-ci.org/hectane/python-hectane.svg)](https://travis-ci.org/hectane/python-hectane)
+[![Coverage Status](https://coveralls.io/repos/hectane/python-hectane/badge.svg?branch=master&service=github)](https://coveralls.io/github/hectane/python-hectane?branch=master)
 [![License](http://img.shields.io/badge/license-MIT-yellow.svg)](http://opensource.org/licenses/MIT)
 [![PyPI Version](http://img.shields.io/pypi/v/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
 [![PyPI Downloads](http://img.shields.io/pypi/dm/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
