@@ -1,5 +1,6 @@
 ## pyhectane
 
+[![Build Status](https://travis-ci.org/hectane/python-hectane.svg)](https://travis-ci.org/hectane/python-hectane)
 [![License](http://img.shields.io/badge/license-MIT-yellow.svg)](http://opensource.org/licenses/MIT)
 [![PyPI Version](http://img.shields.io/pypi/v/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
 [![PyPI Downloads](http://img.shields.io/pypi/dm/pyhectane.svg)](https://pypi.python.org/pypi/pyhectane)
