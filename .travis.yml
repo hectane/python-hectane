@@ -5,6 +5,6 @@ python:
 install:
   pip install coveralls
 script:
-  nosetests --with-coverage --cover-package=pyhectane
+  python setup.py nosetests --with-coverage --cover-package=pyhectane
 after_success:
   coveralls
