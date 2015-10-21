@@ -51,16 +51,28 @@ class Connection:
                     "encoded": True,
                 }
 
+    def raw(self, from_, to, body):
+        """
+        Send a raw MIME message.
+        """
+        if isinstance(to, string_types):
+            raise TypeError('"to" parameter must be enumerable')
+        return self._session.post('{}/raw'.format(self._url), json={
+            'from': from_,
+            'to': to,
+            'body': body,
+        }).json()
+
     def send(self, from_, to, subject, text='', html='', cc=[], bcc=[],
              attachments=[]):
         """
-        Send an email using Hectane.
+        Send an email.
         """
         if isinstance(to, string_types):
             raise TypeError('"to" parameter must be enumerable')
         if text == '' and html == '':
             raise ValueError('"text" and "html" must not both be empty')
-        return self._session.post("{}/send".format(self._url), json={
+        return self._session.post('{}/send'.format(self._url), json={
             'from': from_,
             'to': to,
             'cc': cc,
@@ -71,8 +83,14 @@ class Connection:
             'attachments': list(self._process_attachments(attachments)),
         }).json()
 
+    def status(self):
+        """
+        Retrieve status information.
+        """
+        return self._session.get('{}/status'.format(self._url)).json()
+
     def version(self):
         """
-        Obtain the current version of Hectane.
+        Retrieve the application version.
         """
-        return self._session.get("{}/version".format(self._url)).json()
+        return self._session.get('{}/version'.format(self._url)).json()
