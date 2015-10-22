@@ -1,3 +1,4 @@
+from base64 import b64decode
 from json import loads
 from os.path import basename
 from tempfile import NamedTemporaryFile
@@ -118,14 +119,15 @@ class TestConnection:
 
     def test_send_attachment_filename(self):
         with NamedTemporaryFile() as f:
-            f.write(self._DATA.encode())
+            f.write(self._BDATA)
+            f.seek(0)
             with self._r:
-                self._c.send(self._FROM, [self._TO], self._SUBJECT, self._DATA,
+                self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA,
                              attachments=[f.name])
             data = loads(self._r.data.decode())
-            eq_(len(data['attachments']), 1)
             eq_(data['attachments'][0]['filename'], basename(f.name))
             eq_(data['attachments'][0]['encoded'], True)
+            eq_(b64decode(data['attachments'][0]['content']), self._BDATA)
 
     def test_status(self):
         with self._r:
