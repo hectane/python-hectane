@@ -24,6 +24,7 @@ class SimpleHttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
     def do_POST(self):
         self._respond()
+        self.data = self.rfile.read()
 
     def log_message(self, format, *args):
         pass
@@ -45,14 +46,21 @@ class SimpleHttpServer(BaseHTTPServer.HTTPServer):
 class Request:
     """
     Allows a single request to be processed by using Python's "with" statement.
+    A server is run in a separate thread for processing requests. The server
+    captures the request information and makes its attributes available.
     """
+
+    def __init__(self):
+        self._server = SimpleHttpServer(('127.0.0.1', 0), SimpleHttpHandler)
+        self._server.timeout = 1
+        self._thread = Thread(target=self._server.handle_request)
+        self.port = self._server.server_address[1]
 
     def __getattr__(self, name):
         return getattr(self._server.request, name)
 
     def __enter__(self):
-        self._server = SimpleHttpServer(('127.0.0.1', 8025), SimpleHttpHandler)
-        self._thread = Thread(target=self._server.handle_request)
+        self._server.request = None
         self._thread.start()
 
     def __exit__(self, type, value, traceback):
@@ -64,9 +72,35 @@ class TestConnection:
     Run some simple tests to ensure the Connection class works correctly.
     """
 
+    _FROM = 'from@example.com'
+    _TO = ['to@example.com']
+    _SUBJECT = 'Test'
+    _DATA = '0123456789'
+
+    def setUp(self):
+        self._r = Request()
+        self._c = Connection(port=self._r.port)
+
+    def test_raw(self):
+        with self._r:
+            self._c.raw(self._FROM, self._TO, self._DATA)
+        eq_(self._r.command, 'POST')
+        eq_(self._r.path, '/v1/raw')
+
+    def test_send(self):
+        with self._r:
+            self._c.send(self._FROM, self._TO, self._SUBJECT, self._DATA)
+        eq_(self._r.command, 'POST')
+        eq_(self._r.path, '/v1/send')
+
+    def test_status(self):
+        with self._r:
+            self._c.status()
+        eq_(self._r.command, 'GET')
+        eq_(self._r.path, '/v1/status')
+
     def test_version(self):
-        r = Request()
-        with r:
-            Connection().version()
-        eq_(r.command, 'GET')
-        eq_(r.path, '/v1/version')
+        with self._r:
+            self._c.version()
+        eq_(self._r.command, 'GET')
+        eq_(self._r.path, '/v1/version')
