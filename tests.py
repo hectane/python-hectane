@@ -4,7 +4,7 @@ from tempfile import NamedTemporaryFile
 from threading import Thread
 
 from nose.tools import eq_, raises
-from six import u
+from six import b, u
 from six.moves import BaseHTTPServer
 
 from pyhectane import Connection
@@ -80,7 +80,8 @@ class TestConnection:
     _FROM = 'from@example.com'
     _TO = 'to@example.com'
     _SUBJECT = 'Test'
-    _DATA = u('0123456789')
+    _BDATA = b('\x00\x01\x02')
+    _SDATA = u('0123456789')
 
     def setUp(self):
         self._r = Request()
@@ -88,25 +89,27 @@ class TestConnection:
 
     def test_raw(self):
         with self._r:
-            self._c.raw(self._FROM, [self._TO], self._DATA)
+            self._c.raw(self._FROM, [self._TO], self._SDATA)
+        data = loads(self._r.data.decode())
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/raw')
+        eq_(data['body'], self._SDATA)
 
     @raises(TypeError)
     def test_raw_bad_to(self):
         with self._r:
-            self._c.raw(self._FROM, self._TO, self._DATA)
+            self._c.raw(self._FROM, self._TO, self._SDATA)
 
     def test_send(self):
         with self._r:
-            self._c.send(self._FROM, [self._TO], self._SUBJECT, self._DATA)
+            self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA)
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/send')
 
     @raises(TypeError)
     def test_send_bad_to(self):
         with self._r:
-            self._c.send(self._FROM, self._TO, self._SUBJECT, self._DATA)
+            self._c.send(self._FROM, self._TO, self._SUBJECT, self._SDATA)
 
     @raises(ValueError)
     def test_send_empty_content(self):
