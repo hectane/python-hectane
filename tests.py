@@ -1,6 +1,10 @@
+from json import loads
+from os.path import basename
+from tempfile import NamedTemporaryFile
 from threading import Thread
 
 from nose.tools import eq_, raises
+from six import u
 from six.moves import BaseHTTPServer
 
 from pyhectane import Connection
@@ -70,13 +74,13 @@ class Request:
 
 class TestConnection:
     """
-    Run some simple tests to ensure the Connection class works correctly.
+    Run simple tests against Connection's methods.
     """
 
     _FROM = 'from@example.com'
     _TO = 'to@example.com'
     _SUBJECT = 'Test'
-    _DATA = '0123456789'
+    _DATA = u('0123456789')
 
     def setUp(self):
         self._r = Request()
@@ -108,6 +112,17 @@ class TestConnection:
     def test_send_empty_content(self):
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT)
+
+    def test_send_attachment_filename(self):
+        with NamedTemporaryFile() as f:
+            f.write(self._DATA.encode())
+            with self._r:
+                self._c.send(self._FROM, [self._TO], self._SUBJECT, self._DATA,
+                             attachments=[f.name])
+            data = loads(self._r.data.decode())
+            eq_(len(data['attachments']), 1)
+            eq_(data['attachments'][0]['filename'], basename(f.name))
+            eq_(data['attachments'][0]['encoded'], True)
 
     def test_status(self):
         with self._r:
