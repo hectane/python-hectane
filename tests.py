@@ -88,6 +88,11 @@ class TestConnection:
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/raw')
 
+    @raises(TypeError)
+    def test_raw_bad_to(self):
+        with self._r:
+            self._c.raw(self._FROM, self._TO, self._DATA)
+
     def test_send(self):
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT, self._DATA)
@@ -98,6 +103,11 @@ class TestConnection:
     def test_send_bad_to(self):
         with self._r:
             self._c.send(self._FROM, self._TO, self._SUBJECT, self._DATA)
+
+    @raises(ValueError)
+    def test_send_empty_content(self):
+        with self._r:
+            self._c.send(self._FROM, [self._TO], self._SUBJECT)
 
     def test_status(self):
         with self._r:
