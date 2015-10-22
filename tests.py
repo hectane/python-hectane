@@ -17,7 +17,7 @@ class SimpleHttpHandler(BaseHTTPServer.BaseHTTPRequestHandler):
         self.send_header('Content-length', '2')
         self.send_header('Content-type', 'text/html')
         self.end_headers()
-        self.wfile.write('{}')
+        self.wfile.write(b'{}')
 
     def do_GET(self):
         self._respond()
