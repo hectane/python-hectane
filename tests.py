@@ -1,6 +1,6 @@
 from threading import Thread
 
-from nose.tools import eq_
+from nose.tools import eq_, raises
 from six.moves import BaseHTTPServer
 
 from pyhectane import Connection
@@ -52,8 +52,8 @@ class Request:
 
     def __init__(self):
         self._server = SimpleHttpServer(('127.0.0.1', 0), SimpleHttpHandler)
-        self._server.timeout = 1
-        self._thread = Thread(target=self._server.handle_request)
+        self._server.timeout = 2
+        self._thread = Thread(target=self._server.serve_forever, args=[0.1])
         self.port = self._server.server_address[1]
 
     def __getattr__(self, name):
@@ -64,6 +64,7 @@ class Request:
         self._thread.start()
 
     def __exit__(self, type, value, traceback):
+        self._server.shutdown()
         self._thread.join()
 
 
@@ -73,7 +74,7 @@ class TestConnection:
     """
 
     _FROM = 'from@example.com'
-    _TO = ['to@example.com']
+    _TO = 'to@example.com'
     _SUBJECT = 'Test'
     _DATA = '0123456789'
 
@@ -83,15 +84,20 @@ class TestConnection:
 
     def test_raw(self):
         with self._r:
-            self._c.raw(self._FROM, self._TO, self._DATA)
+            self._c.raw(self._FROM, [self._TO], self._DATA)
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/raw')
 
     def test_send(self):
         with self._r:
-            self._c.send(self._FROM, self._TO, self._SUBJECT, self._DATA)
+            self._c.send(self._FROM, [self._TO], self._SUBJECT, self._DATA)
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/send')
+
+    @raises(TypeError)
+    def test_send_bad_to(self):
+        with self._r:
+            self._c.send(self._FROM, self._TO, self._SUBJECT, self._DATA)
 
     def test_status(self):
         with self._r:
