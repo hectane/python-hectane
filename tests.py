@@ -116,17 +116,18 @@ class TestConnection:
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT)
 
-    def test_send_attachment_filename(self):
+    def test_send_attachment_file(self):
         with NamedTemporaryFile() as f:
             f.write(self._BDATA)
             f.seek(0)
-            with self._r:
-                self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA,
-                             attachments=[f.name])
-            data = loads(self._r.data.decode())
-            eq_(data['attachments'][0]['filename'], basename(f.name))
-            eq_(data['attachments'][0]['encoded'], True)
-            eq_(b64decode(data['attachments'][0]['content']), self._BDATA)
+            for use_name in [True, False]:
+                with self._r:
+                    self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA,
+                                 attachments=[f.name if use_name else f])
+                data = loads(self._r.data.decode())
+                eq_(data['attachments'][0]['filename'], basename(f.name))
+                eq_(data['attachments'][0]['encoded'], True)
+                eq_(b64decode(data['attachments'][0]['content']), self._BDATA)
 
     def test_status(self):
         with self._r:
