@@ -1,4 +1,4 @@
-from base64 import encodestring
+from base64 import b64encode
 from mimetypes import guess_type
 from os.path import basename
 
@@ -36,9 +36,6 @@ class Connection:
         """
         for a in attachments:
             if isinstance(a, dict):
-                if 'encoded' not in a or not a['encoded']:
-                    a['content'] = encodestring(a['content'])
-                    a['encoded'] = True
                 yield a
             else:
                 if isinstance(a, string_types):
@@ -47,7 +44,7 @@ class Connection:
                 yield {
                     "filename": filename,
                     "content_type": guess_type(filename)[0] or 'application/octet-stream',
-                    "content": encodestring(a.read()),
+                    "content": b64encode(a.read()).decode(),
                     "encoded": True,
                 }
 
