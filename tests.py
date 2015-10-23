@@ -114,8 +114,10 @@ class TestConnection:
     def test_send(self):
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA)
+        data = loads(self._r.data.decode())
         eq_(self._r.command, 'POST')
         eq_(self._r.path, '/v1/send')
+        eq_(data['text'], self._SDATA)
 
     @raises(TypeError)
     def test_send_bad_to(self):
