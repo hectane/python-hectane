@@ -1,4 +1,4 @@
-from base64 import b64decode
+from base64 import b64decode, b64encode
 from json import loads
 from os.path import basename
 from tempfile import NamedTemporaryFile
@@ -77,6 +77,9 @@ class TestConnection:
     Run simple tests against Connection's methods.
     """
 
+    _USERNAME = 'username'
+    _PASSWORD = 'password'
+
     _FROM = 'from@example.com'
     _TO = 'to@example.com'
     _SUBJECT = 'Test'
@@ -86,6 +89,14 @@ class TestConnection:
     def setUp(self):
         self._r = Request()
         self._c = Connection(port=self._r.port)
+
+    def test_auth(self):
+        with self._r:
+            Connection(port=self._r.port, username=self._USERNAME,
+                       password=self._PASSWORD).version()
+        eq_(self._r.headers['authorization'], 'Basic {}'.format(
+            b64encode('{}:{}'.format(self._USERNAME, self._PASSWORD).encode()).decode(),
+        ))
 
     def test_raw(self):
         with self._r:
