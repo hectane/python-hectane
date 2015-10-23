@@ -57,8 +57,6 @@ class Request:
 
     def __init__(self):
         self._server = SimpleHttpServer(('127.0.0.1', 0), SimpleHttpHandler)
-        self._server.timeout = 2
-        self._thread = Thread(target=self._server.serve_forever, args=[0.1])
         self.port = self._server.server_address[1]
 
     def __getattr__(self, name):
@@ -66,6 +64,7 @@ class Request:
 
     def __enter__(self):
         self._server.request = None
+        self._thread = Thread(target=self._server.serve_forever, args=[0.1])
         self._thread.start()
 
     def __exit__(self, type, value, traceback):
