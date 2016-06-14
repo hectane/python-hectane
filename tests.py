@@ -129,12 +129,13 @@ class TestConnection:
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT)
 
-    def test_send_attachment_dict(self):
+    def test_send_attachment_binary(self):
         with self._r:
             self._c.send(self._FROM, [self._TO], self._SUBJECT, self._SDATA,
-                         attachments=[{}])
+                         attachments=[{'content': self._BDATA}])
         data = loads(self._r.data.decode())
-        eq_(len(data['attachments']), 1)
+        eq_(data['attachments'][0]['encoded'], True)
+        eq_(b64decode(data['attachments'][0]['content']), self._BDATA)
 
     def test_send_attachment_file(self):
         with NamedTemporaryFile() as f:

@@ -3,7 +3,7 @@ from mimetypes import guess_type
 from os.path import basename
 
 from requests import Session
-from six import string_types
+from six import binary_type, string_types
 
 
 class Connection:
@@ -35,18 +35,19 @@ class Connection:
         if the filename cannot be determined, it will be set to "untitled".
         """
         for a in attachments:
-            if isinstance(a, dict):
-                yield a
-            else:
+            if not isinstance(a, dict):
                 if isinstance(a, string_types):
                     a = open(a, 'rb')
                 filename = basename(getattr(a, 'name', 'untitled'))
-                yield {
+                a = {
                     "filename": filename,
                     "content_type": guess_type(filename)[0] or 'application/octet-stream',
-                    "content": b64encode(a.read()).decode(),
-                    "encoded": True,
+                    "content": a.read(),
                 }
+            if isinstance(a['content'], binary_type):
+                a['content'] = b64encode(a['content']).decode()
+                a['encoded'] = True
+            yield a
 
     def raw(self, from_, to, body):
         """
