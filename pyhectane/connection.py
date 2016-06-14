@@ -62,7 +62,7 @@ class Connection:
         }).json()
 
     def send(self, from_, to, subject, text='', html='', cc=[], bcc=[],
-             attachments=[]):
+             headers={}, attachments=[]):
         """
         Send an email.
         """
@@ -76,6 +76,7 @@ class Connection:
             'cc': cc,
             'bcc': bcc,
             'subject': subject,
+            'headers': headers,
             'text': text,
             'html': html,
             'attachments': list(self._process_attachments(attachments)),
